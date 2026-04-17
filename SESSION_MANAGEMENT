@@ -1,0 +1,194 @@
+# 🛡️ Session Management Testing Playbook
+
+A practical, methodology-driven guide for identifying session management vulnerabilities during bug bounty hunting and web application security testing.
+
+---
+
+## 🎯 Objective
+
+This playbook helps in:
+
+* Systematically analyzing session handling
+* Identifying real-world vulnerabilities
+* Moving from lab-based learning → practical exploitation
+
+---
+
+## 🧠 Core Mindset
+
+> **Session ≠ Just Cookies**
+
+Session management may involve:
+
+* Cookies (HttpOnly, Secure, SameSite)
+* LocalStorage / SessionStorage
+* JWT Tokens
+* API Headers
+* Backend validation logic
+
+---
+
+## 🔄 Session Lifecycle Methodology
+
+Every target should be analyzed across these 4 phases:
+
+### 1. Session Creation
+
+* How is the session generated?
+* Is the session ID random and unique?
+* Are multiple sessions allowed?
+* Is session fixation possible?
+
+---
+
+### 2. Session Tracking
+
+* What identifies the user?
+
+  * Cookie?
+  * Token?
+  * LocalStorage?
+
+* Test cases:
+
+  * Remove session → does access still work?
+  * Replace session → does identity change?
+  * Replay requests → still valid?
+
+---
+
+### 3. Session Expiry
+
+* Does the session expire properly?
+* Is it refreshed automatically?
+* Is expiry enforced server-side?
+
+⚠️ Weakness Indicator:
+
+* Long-lived or non-expiring sessions
+
+---
+
+### 4. Session Termination
+
+* Does logout invalidate session server-side?
+* Can old sessions be reused?
+* Any abnormal behavior (e.g., 500 errors)?
+
+⚠️ Weakness Indicator:
+
+* Improper session invalidation
+
+---
+
+## 🔍 Practical Testing Checklist
+
+### 🧪 Authentication Testing
+
+* Login and capture request/response
+* Identify session tokens (cookie / header / storage)
+
+---
+
+### 🧪 Client-Side Storage Analysis
+
+* Inspect:
+
+  * Cookies
+  * LocalStorage
+  * SessionStorage
+
+* Modify values:
+
+  * userRole
+  * userId
+  * username
+
+---
+
+### 🧪 Request Manipulation
+
+* Remove cookies and resend request
+* Replace with another session
+* Replay old requests
+
+---
+
+### 🧪 Access Control Testing
+
+* Access endpoints without authentication
+* Attempt privilege escalation
+* Combine with IDOR testing
+
+---
+
+## 💣 Common Vulnerabilities
+
+* Broken Access Control
+* Privilege Escalation (client-side role manipulation)
+* Excessive Session Lifetime
+* Session Fixation
+* Improper Session Termination
+* Token Mismanagement
+
+---
+
+## ⚠️ Important Notes
+
+* HttpOnly prevents JavaScript access to cookies but **does NOT prevent XSS**
+* Session hijacking is less common today due to modern protections
+* Focus more on **logic flaws and trust issues**
+
+---
+
+## 🧭 Real-World Hunting Workflow
+
+1. Login into application
+
+2. Open DevTools → Network + Storage
+
+3. Identify session mechanism
+
+4. Ask:
+
+   > "What controls identity in this app?"
+
+5. Test:
+
+   * Remove session
+   * Modify tokens
+   * Replay requests
+   * Change roles / IDs
+
+---
+
+## 🧠 Retention Strategy
+
+After each lab or target, document:
+
+```txt
+Session Mechanism:
+Weakness Found:
+Lifecycle Phase Broken:
+```
+
+---
+
+## 🔥 Key Takeaway
+
+> Most real bugs are not in cryptography —
+> they are in **how the application trusts the client**.
+
+---
+
+## 📌 Recommended Practice
+
+* PortSwigger Web Security Academy (Auth & Session labs)
+* Real-world bug bounty platforms
+* Re-testing known vulnerable apps
+
+---
+
+## 📖 License
+
+This playbook is for educational and ethical testing purposes only.
